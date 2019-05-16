@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 @ApplicationPath("servicios")
 public class ServicePath extends Application{
@@ -12,7 +11,7 @@ public class ServicePath extends Application{
     public Set<Class<?>> getClasses() {
         final Set<Class<?>> classes = new HashSet<>();
         //Clase para pasar ficheros binarios. (Subida)
-        classes.add(MultiPartFeature.class);
+        //classes.add(MultiPartFeature.class);
         //Clases usadas.
         classes.add(AprecioFacadeREST.class);
         classes.add(ComentarioFacadeREST.class);
