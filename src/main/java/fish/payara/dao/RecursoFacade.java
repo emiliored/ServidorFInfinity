@@ -1,5 +1,6 @@
 package fish.payara.dao;
 
+import fish.payara.clases.cliente.RecursoCliente;
 import fish.payara.model.Recurso;
 import fish.payara.model.Usuario;
 import java.util.List;
@@ -61,10 +62,10 @@ public class RecursoFacade extends AbstractFacade<Recurso> {
     
     
     //Obtener los nombres de los recursos públicos de todos los usuarios.	SIN ETIQUETAR (Ordenado alfabéticamente por nombre)
-    public List<String> recursosUsuario() throws Exception{
+    public List<RecursoCliente> recursosUsuario() throws Exception{
         //Sentencia JQL
-        TypedQuery<String> query = entityManager.createQuery("SELECT r.nombre FROM Recurso r WHERE r.visibilidad = true ORDER BY 1"
-                , String.class)
+        TypedQuery<RecursoCliente> query = entityManager.createQuery("SELECT r.idRecurso,r.nombre FROM Recurso r WHERE r.visibilidad = true ORDER BY 1"
+                , RecursoCliente.class)
                 .setMaxResults(20); //Número máximo de resultados.
         return query.getResultList();
     } 
