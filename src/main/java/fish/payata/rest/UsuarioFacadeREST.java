@@ -1,10 +1,11 @@
 package fish.payata.rest;
 
+import fish.payara.clases.cliente.UsuarioCliente;
+import fish.payara.clases.BadPasswordException;
+import fish.payara.clases.Cifrado;
 import fish.payara.dao.UsuarioFacade;
 import fish.payara.model.Usuario;
-import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -19,13 +20,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 @ApplicationScoped
 @Path("usuario")
@@ -40,13 +39,14 @@ public class UsuarioFacadeREST {
     @Path("count")
     @Produces(TEXT_PLAIN)
     public long countREST() {
+        LOGGER.info("En count()");
         return usuarioFacade.count();
     }
 
     @GET
     @Produces(APPLICATION_JSON)
     public List<Usuario> findAll() {
-        LOGGER.info("En enfonfAll()");
+        LOGGER.info("En findAll()");
         return usuarioFacade.findAll();
     }
 
@@ -59,6 +59,7 @@ public class UsuarioFacadeREST {
         return Response.ok(usuario).build();
     }
 
+    //TODO Hacer borrado de usuarios y recursos.
     @DELETE
     @Path("{idUsuario : \\d+}")
     public Response deleteUsuario(@PathParam("idUsuario") int id_usuario) {
@@ -67,39 +68,31 @@ public class UsuarioFacadeREST {
         return Response.ok().build();
     }
 
-    /*@PUT
-    @Consumes(APPLICATION_JSON)
-    public Response putUsuario(@Context UriInfo uriInfo, Usuario usuario) {
-        LOGGER.info("En putUsuario()");
-        //usuario.setIdUsuario(0);
-        usuarioFacade.create(usuario);
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        URI uri = uriBuilder.path(Integer.toString(usuario.getIdUsuario())).build();
-        return Response.created(uri).build();
-    }*/
-
     //Login de un usuario:
     @Path("login")
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response loginUsuario(@QueryParam("apodo")String apodo,@QueryParam("contrasena")String contrasena) {
         LOGGER.info("En loginUsuario()");
+        Usuario u;
         try {
-            Usuario u=usuarioFacade.getUsuario(apodo);
+            u=usuarioFacade.getUsuario(apodo);
             if(!u.getContrasena().equals(Cifrado.getEncryptedPassword(contrasena, u.getUsersalt())))
                 throw new BadPasswordException("Contraseña inválida.");
-        } catch(BadPasswordException bpe){
-            return Response.status(Status.NO_CONTENT).build();
+        //} catch(BadPasswordException bpe){
+            //return Response.status(Status.NO_CONTENT).build();
         } catch (Exception ex) {
             Logger.getLogger(UsuarioFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Status.NOT_ACCEPTABLE).build();
         }
-        return Response.status(Status.ACCEPTED).build();
+        return Response.status(Status.ACCEPTED).entity(new UsuarioCliente(u.getIdUsuario(),u.getApodo())).build();
     }
     
     //Registro de un usuario:
     @Path("registro")
     @PUT
-    @Consumes(APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createUsuario(Usuario usuario) {
         LOGGER.info("En createUsuario()");
         try {
@@ -113,24 +106,22 @@ public class UsuarioFacadeREST {
             Logger.getLogger(UsuarioFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Status.NOT_ACCEPTABLE).build();
         }
-        return Response.status(Status.CREATED).build();
+        return Response.status(Status.CREATED).entity(new UsuarioCliente(usuario.getIdUsuario(),usuario.getApodo())).build();
     }
     
-    
+    //Modificar la contraseña de un usuario:
     @POST
-    @Consumes(APPLICATION_JSON)
-    public Response postUsuario(Usuario usuario) {
+    public Response postUsuario(@QueryParam("apodo")String apodo,@QueryParam("contrasena")String contrasena) {
         LOGGER.info("En postUsuario()");
-        usuarioFacade.edit(usuario);
+        try{
+            Usuario u=usuarioFacade.getUsuario(apodo);
+            u.setContrasena(Cifrado.getEncryptedPassword(contrasena,u.getUsersalt()));
+            usuarioFacade.edit(u);
+        } catch (Exception e){
+            Logger.getLogger(UsuarioFacadeREST.class.getName()).log(Level.SEVERE, null, e);
+            return Response.status(Status.NOT_MODIFIED).build();
+        }
         return Response.ok().build();
     }
 
-    /*@GET
-    @Produces(APPLICATION_JSON)
-    @Path("{apodo : \\d+}/{contrasena : \\d+}")
-    public Usuario getLogin(@PathParam("apodo") String apodo, @PathParam("contrasena") String contrasena) {
-        LOGGER.info("En ()");
-        Usuario usuario = usuarioFacade.login(apodo, contrasena);
-        return usuario;
-    }*/
 }

@@ -34,7 +34,7 @@ public class VisibilidadFacadeREST {
     @GET
     @Produces(APPLICATION_JSON)
     public List<Visibilidad> findAll() {
-        LOGGER.info("En enfonfAll()");
+        LOGGER.info("En findAll()");
         return visibilidadFacade.findAll();
     }
     /*
@@ -51,7 +51,7 @@ public class VisibilidadFacadeREST {
     @DELETE
     @Consumes(APPLICATION_JSON)
     public Response deleteVisibilidad(EtiquetaPK id) {
-        LOGGER.info("En deleteUsuario()");
+        LOGGER.info("En deleteVisibilidad()");
         visibilidadFacade.remove(id);
         return Response.ok().build();
     }
@@ -59,7 +59,7 @@ public class VisibilidadFacadeREST {
     @PUT
     @Consumes(APPLICATION_JSON)
     public Response putVisibilidad(@Context UriInfo uriInfo, Visibilidad visibilidad) {
-        LOGGER.info("En putAprecio()");
+        LOGGER.info("En putVisibilidad()");
         visibilidadFacade.create(visibilidad);
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
         URI uri = uriBuilder.path(Integer.toString(visibilidad.getVisibilidadPK().getIdUsuario(), visibilidad.getVisibilidadPK().getIdRecurso())).build();
@@ -69,7 +69,7 @@ public class VisibilidadFacadeREST {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response postVisibilidad(Visibilidad visibilidad) {
-        LOGGER.info("En postUsuario()");
+        LOGGER.info("En postVisibilidad()");
         visibilidadFacade.edit(visibilidad);
         return Response.ok().build();
     }

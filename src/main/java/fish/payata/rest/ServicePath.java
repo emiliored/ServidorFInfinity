@@ -10,8 +10,6 @@ public class ServicePath extends Application{
     @Override
     public Set<Class<?>> getClasses() {
         final Set<Class<?>> classes = new HashSet<>();
-        //Clase para pasar ficheros binarios. (Subida)
-        //classes.add(MultiPartFeature.class);
         //Clases usadas.
         classes.add(AprecioFacadeREST.class);
         classes.add(ComentarioFacadeREST.class);

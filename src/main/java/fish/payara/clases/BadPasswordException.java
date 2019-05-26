@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fish.payata.rest;
+package fish.payara.clases;
 
 /**
  * Clase usada para indicar que una contraseña no es válida, es decir, no concuerda con la base de datos.

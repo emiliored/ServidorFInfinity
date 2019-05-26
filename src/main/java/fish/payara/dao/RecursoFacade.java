@@ -58,21 +58,16 @@ public class RecursoFacade extends AbstractFacade<Recurso> {
         
         return typeQuery.getResultList();
     }
-    /* 
-    //Obtener el recurso a partir de su hash.
-    public Recurso getRecurso(String hash) throws Exception{
-       
-        LOGGER.info("En getRecurso()");
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Recurso> criteriaQuery = criteriaBuilder.createQuery(Recurso.class);
-        Root<Recurso> root = criteriaQuery.from(Recurso.class);
-        
-        criteriaQuery.select(root);
-        criteriaQuery.where(
-                criteriaBuilder.equal(root.get("filehash"), hash)
-        );
-        
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
-    }*/
+    
+    
+    //Obtener los nombres de los recursos públicos de todos los usuarios.	SIN ETIQUETAR (Ordenado alfabéticamente por nombre)
+    public List<String> recursosUsuario() throws Exception{
+        //Sentencia JQL
+        TypedQuery<String> query = entityManager.createQuery("SELECT r.nombre FROM Recurso r WHERE r.visibilidad = true ORDER BY 1"
+                , String.class)
+                .setMaxResults(20); //Número máximo de resultados.
+        return query.getResultList();
+    } 
+     
+     
 }

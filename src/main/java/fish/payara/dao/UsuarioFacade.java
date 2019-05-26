@@ -42,28 +42,10 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         return LOGGER;
     }
 
-    /*
-    public Usuario login(String apodo, String contraseña) {
-        LOGGER.info("En findUserResouces()");
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
-        Root<Usuario> root = criteriaQuery.from(Usuario.class);
-        
-        criteriaQuery.select(root);
-        ParameterExpression<String> p1 = criteriaBuilder.parameter(String.class);
-        ParameterExpression<String> p2 = criteriaBuilder.parameter(String.class);
-        criteriaQuery.where(
-                criteriaBuilder.equal(root.get("apodo"), p1),
-                criteriaBuilder.equal(root.get("contrasena"), p2)
-        );
-        
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
-    }*/
     //Obtener el usuario a partir de su apodo.
     public Usuario getUsuario(String apodo) throws Exception{
        
-        LOGGER.info("En findUserResouces()");
+        LOGGER.info("En getUsuario()");
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
