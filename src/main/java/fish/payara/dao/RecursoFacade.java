@@ -1,6 +1,6 @@
 package fish.payara.dao;
 
-import fish.payara.clases.cliente.RecursoCliente;
+import fish.payara.model.Etiqueta;
 import fish.payara.model.Recurso;
 import fish.payara.model.Usuario;
 import java.util.List;
@@ -61,14 +61,23 @@ public class RecursoFacade extends AbstractFacade<Recurso> {
     }
     
     
-    //Obtener los nombres de los recursos públicos de todos los usuarios.	SIN ETIQUETAR (Ordenado alfabéticamente por nombre)
-    public List<RecursoCliente> recursosUsuario() throws Exception{
+    //Obtener los nombres de los recursos públicos que no tienen etiquetas de todos los usuarios.	SIN ETIQUETAR (Ordenado alfabéticamente por nombre)
+    public List<Recurso> recursosSinEtiquetar() throws Exception{
         //Sentencia JQL
-        TypedQuery<RecursoCliente> query = entityManager.createQuery("SELECT r.idRecurso,r.nombre FROM Recurso r WHERE r.visibilidad = true ORDER BY 1"
-                , RecursoCliente.class)
+        TypedQuery<Recurso> query = entityManager.createQuery("SELECT R FROM Recurso r WHERE r.visibilidad=true AND R NOT IN(SELECT v.recurso FROM Visibilidad v)"
+                , Recurso.class)
                 .setMaxResults(20); //Número máximo de resultados.
         return query.getResultList();
     } 
      
-     
+    //Obtener los recursos a partir de una etiqueta.
+    public List<Recurso> recursosEtiqueta(String nombre) throws Exception{
+        //Sentencia JQL
+        TypedQuery<Recurso> query = entityManager.createQuery("SELECT v.recurso FROM Visibilidad v WHERE v.recurso.visibilidad=true AND v.etiqueta.etiquetaPK.nombre=:nombre"
+                , Recurso.class)
+                .setMaxResults(20); //Número máximo de resultados.
+        query.setParameter("nombre",nombre);
+        return query.getResultList();
+    } 
+    
 }

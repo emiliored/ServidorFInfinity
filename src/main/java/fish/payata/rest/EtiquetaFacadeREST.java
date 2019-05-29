@@ -8,6 +8,7 @@ import fish.payara.model.Visibilidad;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -33,6 +34,9 @@ public class EtiquetaFacadeREST {
     @Inject
     private EtiquetaFacade etiquetaFacade;
 
+    @Inject
+    private VisibilidadFacade visibilidadFacade;
+
     private final static Logger LOGGER = Logger.getLogger(EtiquetaFacadeREST.class.getName());
 
     @GET
@@ -46,11 +50,11 @@ public class EtiquetaFacadeREST {
     @GET
     @Path("publicas")
     @Produces(APPLICATION_JSON)
-    public Response findPublicasUsuario(@QueryParam("idUsuario")int idUsuario) {
+    public Response findPublicasUsuario(@QueryParam("idUsuario") int idUsuario) {
         LOGGER.info("En findPublicasUsuario()");
-        try{
+        try {
             return Response.ok(etiquetaFacade.etiquetasPublicasUsuario(idUsuario)).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
         }
@@ -60,81 +64,114 @@ public class EtiquetaFacadeREST {
     @GET
     @Path("privadas")
     @Produces(APPLICATION_JSON)
-    public Response findPrivadasUsuario(@QueryParam("idUsuario")int idUsuario) {
+    public Response findPrivadasUsuario(@QueryParam("idUsuario") int idUsuario) {
         LOGGER.info("En findPrivadasUsuario()");
-        try{
+        try {
             return Response.ok(etiquetaFacade.etiquetasPrivadasUsuario(idUsuario)).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
         }
     }
-    
+
     //Obtener las etiquetas publicas de todos los usuarios:	NOVEDADES
     @GET
     @Path("novedades")
     @Produces(APPLICATION_JSON)
     public Response findNovedades() {
         LOGGER.info("En findNovedades()");
-        try{
+        try {
             return Response.ok(etiquetaFacade.etiquetasNovedades()).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
         }
     }
-    
+
     //Obtener las etiquetas publicas de todos los usuarios:	GENERALES (Ordenado alfabéticamente por nombre)
     @GET
     @Path("generales")
     @Produces(APPLICATION_JSON)
     public Response findGenerales() {
         LOGGER.info("En findPublicasGenerales()");
-        try{
+        try {
             return Response.ok(etiquetaFacade.etiquetasGenerales()).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
         }
     }
-    
+
     //Obtener las etiquetas publicas de todos los usuarios:	GENERALES (Ordenado alfabéticamente por nombre)
     @GET
     @Path("valoradas")
     @Produces(APPLICATION_JSON)
     public Response findValoradas() {
         LOGGER.info("En findValoradas()");
-        try{
+        try {
             return Response.ok(etiquetaFacade.etiquetasValoradas()).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
         }
     }
-    
+
     @DELETE
-    @Consumes(APPLICATION_JSON)
-    public Response deleteEtiqueta(EtiquetaPK etiquetaPk) {
-        LOGGER.info("En deleteUsuario()");
-        etiquetaFacade.remove(etiquetaPk);
+    public Response deleteEtiqueta(@QueryParam("idUsuario") int idUsuario, @QueryParam("nombre") String nombre) {
+        LOGGER.info("En deleteEtiqueta()");
+        try {
+            etiquetaFacade.remove(new EtiquetaPK(idUsuario, nombre));
+        } catch (Exception e) {
+            return Response.notModified().build();
+        }
         return Response.ok().build();
     }
 
     @PUT
     @Consumes(APPLICATION_JSON)
-    public Response putEtiqueta(@Context UriInfo uriInfo, Etiqueta etiqueta) {
-        LOGGER.info("En putAprecio()");
-        etiquetaFacade.create(etiqueta);
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        URI uri = uriBuilder.path(Integer.toString(etiqueta.getEtiquetaPK().getIdUsuario()).concat(etiqueta.getEtiquetaPK().getNombre())).build();
-        return Response.created(uri).build();
+    public Response crearEtiqueta(Visibilidad v) {
+        LOGGER.info("En crearEtiqueta()");
+        try {
+            v.setEtiqueta(new Etiqueta(v.getVisibilidadPK().getIdUsuario(), v.getVisibilidadPK().getNomEtiqueta()));
+            if (Objects.isNull(etiquetaFacade.find(v.getEtiqueta().getEtiquetaPK()))) {
+                etiquetaFacade.create(v.getEtiqueta());
+            }
+            visibilidadFacade.create(v);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Status.NOT_IMPLEMENTED).build();
+        }
+        return Response.status(Status.CREATED).build();
     }
 
-    @POST
-    @Consumes(APPLICATION_JSON)
-    public Response postEtiqueta(Etiqueta etiqueta) {
-        LOGGER.info("En postUsuario()");
-        etiquetaFacade.edit(etiqueta);
-        return Response.ok().build();
+    //Obtener las etiquetas publicas de un recurso:
+    @GET
+    @Path("recurso")
+    @Produces(APPLICATION_JSON)
+    public Response getEtiquetasRecurso(@QueryParam("idRecurso") int idRecurso) {
+        LOGGER.info("En getEtiquetasRecurso()");
+        try {
+            return Response.ok(etiquetaFacade.etiquetasDeUnRecurso(idRecurso)).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Status.BAD_REQUEST).build();
+        }
     }
+
+//    @PUT
+//    @Consumes(APPLICATION_JSON)
+//    public Response putEtiqueta(@Context UriInfo uriInfo, Etiqueta etiqueta) {
+//        LOGGER.info("En putAprecio()");
+//        etiquetaFacade.create(etiqueta);
+//        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
+//        URI uri = uriBuilder.path(Integer.toString(etiqueta.getEtiquetaPK().getIdUsuario()).concat(etiqueta.getEtiquetaPK().getNombre())).build();
+//        return Response.created(uri).build();
+//    }
+//    @POST
+//    @Consumes(APPLICATION_JSON)
+//    public Response postEtiqueta(Etiqueta etiqueta) {
+//        LOGGER.info("En postUsuario()");
+//        etiquetaFacade.edit(etiqueta);
+//        return Response.ok().build();
+//    }
 }

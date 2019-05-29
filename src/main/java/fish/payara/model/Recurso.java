@@ -191,22 +191,7 @@ public class Recurso implements Serializable {
         this.usuario = usuario;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 43 * hash + this.idUsuario;
-        hash = 43 * hash + Objects.hashCode(this.idRecurso);
-        hash = 43 * hash + Objects.hashCode(this.nombre);
-        hash = 43 * hash + Objects.hashCode(this.descripcion);
-        hash = 43 * hash + Objects.hashCode(this.filehash);
-        hash = 43 * hash + Objects.hashCode(this.ruta);
-        hash = 43 * hash + (this.visibilidad ? 1 : 0);
-        hash = 43 * hash + Objects.hashCode(this.visibilidadList);
-        hash = 43 * hash + Objects.hashCode(this.comentarioList);
-        hash = 43 * hash + Objects.hashCode(this.aprecioList);
-        hash = 43 * hash + Objects.hashCode(this.usuario);
-        return hash;
-    }
+ 
 
     @Override
     public boolean equals(Object obj) {

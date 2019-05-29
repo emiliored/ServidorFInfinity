@@ -2,6 +2,8 @@ package fish.payata.rest;
 
 import fish.payara.clases.Cifrado;
 import fish.payara.dao.RecursoFacade;
+import fish.payara.model.Etiqueta;
+import fish.payara.model.EtiquetaPK;
 import fish.payara.model.Recurso;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,16 +50,18 @@ public class RecursoFacadeREST {
     public Response findRecursos() {
         LOGGER.info("En findRecursos()");
         try {
-            return Response.ok(recursoFacade.recursosUsuario()).build();
+            return Response.ok(recursoFacade.recursosSinEtiquetar()).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
+    
+    
     @GET
     @Produces(APPLICATION_JSON)
-    public Response getRecursos(@DefaultValue("-1") @QueryParam("id_usuario") int id_usuario) {
+    public Response getRecursos(@DefaultValue("-1") @QueryParam("idUsuario") int id_usuario) {
         LOGGER.info("En getRecursos()");
 
         List<Recurso> listRecursos;
@@ -87,6 +91,20 @@ public class RecursoFacadeREST {
         List<Recurso> listRecursos = recursoFacade.findRange(from, to);
         return Response.ok(listRecursos).build();
     }
+
+    @GET
+    @Produces(APPLICATION_JSON)
+    @Path("etiqueta")
+    public Response getRecursosEtiqueta(@QueryParam("nombre") String nombre) {
+        LOGGER.info("En getRecursosEtiqueta()");
+        try {
+            return Response.ok(recursoFacade.recursosEtiqueta(nombre)).build();
+        } catch (Exception ex) {
+            Logger.getLogger(RecursoFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+    
 
     /*
 	@DELETE
@@ -162,34 +180,34 @@ public class RecursoFacadeREST {
 
     }
 
-    //Subir fichero binario 
-    @POST
-    @Path("subirAvanzado")
-    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public Response subirFicheroAvanzado(
-            //Campos necesarios para la creación de un objeto Recurso.
-            @QueryParam("idUsuario") int idUsuario,
-            @QueryParam("nombre") String nombre,
-            @QueryParam("descripcion") String descripcion,
-            @QueryParam("visibilidad") boolean visibilidad,
-            InputStream is) {
-        //Fichero a guardar.
-        File fichero = new File(CARPETASERVIDOR, nombre);
-        try {
-            //Guardar el fichero en disco.
-            if (!guardar(is, fichero)) {
-                throw new IOException("No se ha podido guardar el fichero.");
-            }
-            //Guardar el recurso en la base de datos.
-            Recurso r = new Recurso(idUsuario, null, nombre, descripcion, Cifrado.createSha1(fichero), fichero.toString(), visibilidad);
-            recursoFacade.create(r);
-            LOGGER.info("En subirFichero() " + fichero.toString());
-            return Response.status(Response.Status.CREATED).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.CONFLICT).build();
-        }
-
-    }
+//    //Subir fichero binario 
+//    @POST
+//    @Path("subirAvanzado")
+//    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+//    public Response subirFicheroAvanzado(
+//            //Campos necesarios para la creación de un objeto Recurso.
+//            @QueryParam("idUsuario") int idUsuario,
+//            @QueryParam("nombre") String nombre,
+//            @QueryParam("descripcion") String descripcion,
+//            @QueryParam("visibilidad") boolean visibilidad,
+//            InputStream is) {
+//        //Fichero a guardar.
+//        File fichero = new File(CARPETASERVIDOR, nombre);
+//        try {
+//            //Guardar el fichero en disco.
+//            if (!guardar(is, fichero)) {
+//                throw new IOException("No se ha podido guardar el fichero.");
+//            }
+//            //Guardar el recurso en la base de datos.
+//            Recurso r = new Recurso(idUsuario, null, nombre, descripcion, Cifrado.createSha1(fichero), fichero.toString(), visibilidad);
+//            recursoFacade.create(r);
+//            LOGGER.info("En subirFichero() " + fichero.toString());
+//            return Response.status(Response.Status.CREATED).build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.CONFLICT).build();
+//        }
+//
+//    }
 
     /**
      * Método que intentará borrar el recurso y su fichero binario asociado, si

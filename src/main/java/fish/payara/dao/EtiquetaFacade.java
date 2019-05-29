@@ -57,7 +57,7 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
     //Obtener una lista de las etiquetas públicas a partir del idUsuario.   PÚBLICAS (Ordenado alfabéticamente por nombre)
     public List<String> etiquetasPublicasUsuario(int idUsuario) throws Exception{
         //Sentencia JQL
-        TypedQuery<String> query = entityManager.createQuery("SELECT v.etiqueta.etiquetaPK.nombre FROM Visibilidad v WHERE v.visibilidad = true AND v.visibilidadPK.idUsuario = :idUsuario ORDER BY 1"
+        TypedQuery<String> query = entityManager.createQuery("SELECT DISTINCT v.etiqueta.etiquetaPK.nombre FROM Visibilidad v WHERE v.visibilidad = true AND v.visibilidadPK.idUsuario = :idUsuario ORDER BY 1"
                 , String.class)
                 .setMaxResults(20); //Número máximo de resultados.
         query.setParameter("idUsuario", idUsuario);
@@ -67,7 +67,7 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
     //Obtener una lista de las etiquetas privadas a partir del idUsuario.   PRIVADAS (Ordenado alfabéticamente por nombre)
      public List<String> etiquetasPrivadasUsuario(int idUsuario) throws Exception{
         //Sentencia JQL
-        TypedQuery<String> query = entityManager.createQuery("SELECT v.etiqueta.etiquetaPK.nombre FROM Visibilidad v WHERE v.visibilidad = false AND v.visibilidadPK.idUsuario = :idUsuario ORDER BY 1"
+        TypedQuery<String> query = entityManager.createQuery("SELECT DISTINCT v.etiqueta.etiquetaPK.nombre FROM Visibilidad v WHERE v.visibilidad = false AND v.visibilidadPK.idUsuario = :idUsuario ORDER BY 1"
                 , String.class)
                 .setMaxResults(20); //Número máximo de resultados.
         query.setParameter("idUsuario", idUsuario);
@@ -81,7 +81,7 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
         if(primer<0)
             primer=0;
         //Sentencia JQL
-        TypedQuery<Etiqueta> query = entityManager.createQuery("SELECT v.etiqueta FROM Visibilidad v WHERE v.visibilidad = true"
+        TypedQuery<Etiqueta> query = entityManager.createQuery("SELECT DISTINCT v.etiqueta FROM Visibilidad v WHERE v.visibilidad = true"
                 , Etiqueta.class)
                 .setFirstResult(primer)
                 .setMaxResults(20); //Número máximo de resultados.
@@ -97,7 +97,7 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
     //Obtener una lista de las etiquetas públicas de todos los usuarios. GENERALES (Ordenado alfabéticamente por nombre)
      public List<Etiqueta> etiquetasGenerales() throws Exception{
         //Sentencia JQL
-        TypedQuery<Etiqueta> query = entityManager.createQuery("SELECT v.etiqueta FROM Visibilidad v WHERE v.visibilidad = true ORDER BY 2"
+        TypedQuery<Etiqueta> query = entityManager.createQuery("SELECT DISTINCT v.etiqueta FROM Visibilidad v WHERE v.visibilidad = true ORDER BY v.etiqueta.etiquetaPK.nombre"
                 , Etiqueta.class)
                 .setMaxResults(20); //Número máximo de resultados.
         return query.getResultList();
@@ -111,7 +111,15 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
                 .setMaxResults(20); //Número máximo de resultados.
         return query.getResultList();
     }  //?? 
-    /*Obtener las etiquetas públicas(de todos los usuarios) de los recursos públicos con más aprecios:	//MAS VALORADAS
-SELECT v.idUsuario,v.nomEtiqueta FROM VISIBILIDAD v INNER JOIN (SELECT COUNT(*) AS numAprecios,a.idRecurso FROM APRECIO a INNER JOIN(SELECT r.idRecurso FROM RECURSO r WHERE visibilidad=TRUE) r ON a.idRecurso=r.idRecurso GROUP BY a.idRecurso ORDER BY 1 DESC) r ON v.idRecurso=r.idRecurso WHERE v.visibilidad=TRUE;*/
      
+    //Obtener una lista de las etiquetas públicas de un recurso.
+     public List<Etiqueta> etiquetasDeUnRecurso(int idRecurso) throws Exception{
+        //Sentencia JQL
+        TypedQuery<Etiqueta> query = entityManager.createQuery("SELECT v.etiqueta FROM Visibilidad v WHERE v.recurso.idRecurso=:idRecurso AND v.visibilidad=true"
+                , Etiqueta.class)
+                .setMaxResults(20); //Número máximo de resultados.
+        query.setParameter("idRecurso", idRecurso);
+        return query.getResultList();
+    }   
+    
 }

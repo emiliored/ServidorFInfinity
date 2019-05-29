@@ -66,14 +66,7 @@ public class Etiqueta implements Serializable {
         this.usuario = usuario;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.etiquetaPK);
-        hash = 79 * hash + Objects.hashCode(this.visibilidadList);
-        hash = 79 * hash + Objects.hashCode(this.usuario);
-        return hash;
-    }
+    
 
     @Override
     public boolean equals(Object obj) {

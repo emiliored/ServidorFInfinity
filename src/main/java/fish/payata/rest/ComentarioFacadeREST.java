@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
@@ -35,6 +36,19 @@ public class ComentarioFacadeREST {
     public List<Comentario> findAll() {
         LOGGER.info("En enfonfAll()");
         return comentarioFacade.findAll();
+    }
+    
+    @GET
+    @Path("recurso")
+    @Produces(APPLICATION_JSON)
+    public Response getComentariosRecurso(@QueryParam("idRecurso")int idRecurso) {
+        LOGGER.info("En getComentariosRecurso()");
+        try{
+            return Response.ok(comentarioFacade.recursosEtiqueta(idRecurso)).build();
+        } catch(Exception e){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        
     }
     
     /*

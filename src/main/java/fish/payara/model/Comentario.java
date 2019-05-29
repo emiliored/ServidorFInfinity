@@ -90,15 +90,7 @@ public class Comentario implements Serializable {
         this.usuario = usuario;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + Objects.hashCode(this.comentarioPK);
-        hash = 89 * hash + Objects.hashCode(this.texto);
-        hash = 89 * hash + Objects.hashCode(this.recurso);
-        hash = 89 * hash + Objects.hashCode(this.usuario);
-        return hash;
-    }
+
 
     @Override
     public boolean equals(Object obj) {

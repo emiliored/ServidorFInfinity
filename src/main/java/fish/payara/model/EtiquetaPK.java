@@ -47,13 +47,7 @@ public class EtiquetaPK implements Serializable {
         this.nombre = nombre;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 37 * hash + this.idUsuario;
-        hash = 37 * hash + Objects.hashCode(this.nombre);
-        return hash;
-    }
+    
 
     @Override
     public boolean equals(Object obj) {

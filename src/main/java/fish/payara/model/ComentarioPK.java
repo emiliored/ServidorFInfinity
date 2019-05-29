@@ -63,15 +63,7 @@ public class ComentarioPK implements Serializable {
         this.fecha = fecha;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 41 * hash + this.idUsuario;
-        hash = 41 * hash + this.idRecurso;
-        hash = 41 * hash + Objects.hashCode(this.fecha);
-        return hash;
-    }
-
+ 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

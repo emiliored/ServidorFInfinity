@@ -89,15 +89,8 @@ public class Visibilidad implements Serializable {
         this.recurso = recurso;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 47 * hash + Objects.hashCode(this.visibilidadPK);
-        hash = 47 * hash + (this.visibilidad ? 1 : 0);
-        hash = 47 * hash + Objects.hashCode(this.etiqueta);
-        hash = 47 * hash + Objects.hashCode(this.recurso);
-        return hash;
-    }
+    
+    
 
     @Override
     public boolean equals(Object obj) {
