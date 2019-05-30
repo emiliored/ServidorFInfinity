@@ -99,7 +99,7 @@ public class Recurso implements Serializable {
         this.ruta = ruta;
         this.visibilidad = visibilidad;
     }
-
+    
     public Integer getIdRecurso() {
         return idRecurso;
     }

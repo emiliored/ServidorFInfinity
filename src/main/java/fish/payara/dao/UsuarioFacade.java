@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
@@ -57,6 +58,14 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         );
         
         return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
+    
+    //Obtener el apodo de un usuario a partir de su idUsuario.
+    public String getApodoUsuario(int idUsuario){
+        TypedQuery<String> query = entityManager.createQuery("SELECT u.apodo FROM Usuario u WHERE u.idUsuario=:idUsuario",
+                 String.class);
+        query.setParameter("idUsuario", idUsuario);
+        return query.getSingleResult();
     }
     
 }

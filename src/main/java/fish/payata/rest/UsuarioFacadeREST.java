@@ -58,6 +58,18 @@ public class UsuarioFacadeREST {
         Usuario usuario = usuarioFacade.find(id_usuario);
         return Response.ok(usuario).build();
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("apodo")
+    public Response getApodoUsuario(@QueryParam("idUsuario") int idUsuario) {
+        LOGGER.info("En getApodoUsuario()");
+        try{
+            return Response.ok(usuarioFacade.getApodoUsuario(idUsuario)).build();
+        } catch(Exception e){
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+    }
 
     //TODO Hacer borrado de usuarios y recursos.
     @DELETE

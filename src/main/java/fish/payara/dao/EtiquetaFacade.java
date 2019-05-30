@@ -98,8 +98,8 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
      public List<Etiqueta> etiquetasGenerales() throws Exception{
         //Sentencia JQL
         TypedQuery<Etiqueta> query = entityManager.createQuery("SELECT DISTINCT v.etiqueta FROM Visibilidad v WHERE v.visibilidad = true ORDER BY v.etiqueta.etiquetaPK.nombre"
-                , Etiqueta.class)
-                .setMaxResults(20); //Número máximo de resultados.
+                , Etiqueta.class);
+                //.setMaxResults(20); //Número máximo de resultados.
         return query.getResultList();
     }  
     

@@ -58,16 +58,15 @@ public class RecursoFacadeREST {
     }
 
     
-    
     @GET
     @Produces(APPLICATION_JSON)
-    public Response getRecursos(@DefaultValue("-1") @QueryParam("idUsuario") int id_usuario) {
+    public Response getRecursos(@DefaultValue("-1") @QueryParam("idUsuario") int idUsuario) {
         LOGGER.info("En getRecursos()");
 
         List<Recurso> listRecursos;
 
-        if (id_usuario != -1) {
-            listRecursos = recursoFacade.findUserResouces(id_usuario);
+        if (idUsuario != -1) {
+            listRecursos = recursoFacade.findUserResouces(idUsuario);
         } else {
             listRecursos = recursoFacade.findAll();
         }
@@ -105,6 +104,18 @@ public class RecursoFacadeREST {
         }
     }
     
+    @GET
+    @Produces(APPLICATION_JSON)
+    @Path("buscar")
+    public Response getRecursosBuscarPorEtiqueta(@QueryParam("nombre") String nombre) {
+        LOGGER.info("En getRecursosBuscarPorEtiqueta()");
+        try {
+            return Response.ok(recursoFacade.recursosBuscarPorEtiqueta(nombre)).build();
+        } catch (Exception ex) {
+            Logger.getLogger(RecursoFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
 
     /*
 	@DELETE
