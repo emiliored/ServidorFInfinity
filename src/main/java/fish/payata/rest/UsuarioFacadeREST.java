@@ -91,13 +91,13 @@ public class UsuarioFacadeREST {
             u=usuarioFacade.getUsuario(apodo);
             if(!u.getContrasena().equals(Cifrado.getEncryptedPassword(contrasena, u.getUsersalt())))
                 throw new BadPasswordException("Contraseña inválida.");
-        //} catch(BadPasswordException bpe){
-            //return Response.status(Status.NO_CONTENT).build();
+            UsuarioCliente uc=usuarioFacade.getUsuarioCliente(u.getIdUsuario(),u.getApodo());
+            System.out.println(uc.toString());
+            return Response.status(Status.ACCEPTED).entity(uc).build();
         } catch (Exception ex) {
             Logger.getLogger(UsuarioFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Status.NOT_ACCEPTABLE).build();
         }
-        return Response.status(Status.ACCEPTED).entity(new UsuarioCliente(u.getIdUsuario(),u.getApodo())).build();
     }
     
     //Registro de un usuario:
@@ -110,15 +110,12 @@ public class UsuarioFacadeREST {
         try {
             usuario.setUsersalt(Cifrado.getNewSalt());
             usuario.setContrasena(Cifrado.getEncryptedPassword(usuario.getContrasena(),usuario.getUsersalt()));
-            usuarioFacade.create(usuario);
-        }catch(NoResultException nre) {
-            //El usuario a introducido un apodo incorrecto.
-            return Response.status(Status.NOT_ACCEPTABLE).build();
+            usuarioFacade.createUsuario(usuario);
+            return Response.status(Status.CREATED).entity(new UsuarioCliente(usuario.getIdUsuario(),usuario.getApodo())).build();
         }catch (Exception ex) {
-            Logger.getLogger(UsuarioFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(UsuarioFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Status.NOT_ACCEPTABLE).build();
         }
-        return Response.status(Status.CREATED).entity(new UsuarioCliente(usuario.getIdUsuario(),usuario.getApodo())).build();
     }
     
     //Modificar la contraseña de un usuario:

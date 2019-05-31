@@ -15,7 +15,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -46,30 +48,48 @@ public class AprecioFacadeREST {
         return Response.ok(aprecio).build();
     }
     */
-
-    @DELETE
-    @Consumes(APPLICATION_JSON)
-    public Response deleteAprecio(AprecioPK aprecioPK) {
-        LOGGER.info("En deleteUsuario()");
-        aprecioFacade.remove(aprecioPK);
-        return Response.ok().build();
+    @GET
+    @Path("likes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getLikes(@QueryParam("idUsuario") int idUsuario,@QueryParam("idRecurso") int idRecurso) {
+        LOGGER.info("En getLikes()");
+        try{
+            return Response.ok(aprecioFacade.obtenerLikes(idUsuario, idRecurso)).build();
+        } catch(Exception e){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
     @PUT
-    @Consumes(APPLICATION_JSON)
-    public Response putAprecio(@Context UriInfo uriInfo, Aprecio aprecio) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response putAprecio(Aprecio a) {
         LOGGER.info("En putAprecio()");
-        aprecioFacade.create(aprecio);
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder();
-        URI uri = uriBuilder.path(Integer.toString(aprecio.getAprecioPK().getIdRecurso(), aprecio.getAprecioPK().getIdUsuario())).build();
-        return Response.created(uri).build();
+        try{
+            aprecioFacade.create(a);
+            return Response.status(Response.Status.CREATED).build();
+        } catch(Exception e){
+            e.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
     @POST
     @Consumes(APPLICATION_JSON)
     public Response postAprecio(Aprecio aprecio) {
-        LOGGER.info("En postUsuario()");
+        LOGGER.info("En postAprecio()");
         aprecioFacade.edit(aprecio);
         return Response.ok().build();
+    }
+    
+    @DELETE
+    public Response deleteAprecio(@QueryParam("idUsuario") int idUsuario, @QueryParam("idRecurso") int idRecurso) {
+        LOGGER.info("En deleteAprecio()");
+        try{
+            aprecioFacade.remove(new AprecioPK(idUsuario,idRecurso));
+            return Response.ok().build();
+        } catch(Exception e){
+            e.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 }

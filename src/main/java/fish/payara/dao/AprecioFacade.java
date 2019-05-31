@@ -1,5 +1,6 @@
 package fish.payara.dao;
 
+import fish.payara.clases.cliente.Like;
 import fish.payara.model.Aprecio;
 import fish.payara.model.AprecioPK;
 import fish.payara.model.Recurso;
@@ -9,6 +10,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -59,5 +61,15 @@ public class AprecioFacade extends AbstractFacade<Aprecio> {
         TypedQuery<Aprecio> typeQuery = entityManager.createQuery(criteriaQuery);
         
         return typeQuery.getResultList();
+    }
+    
+    //Método para obtener los likes de un recurso.
+    public Like obtenerLikes(int idUsuario,int idRecurso){
+        String sentencia="SELECT COUNT(*) AS aprecios, EXISTS ("
+                + "SELECT * FROM APRECIO a2 WHERE a.idRecurso=a2.idRecurso AND a2.idUsuario='"+idUsuario+"') AS propio "
+                + "FROM APRECIO a WHERE a.idRecurso= '"+idRecurso+"'";
+        Query query=entityManager.createNativeQuery(sentencia);
+        Object[] o=(Object[]) query.getSingleResult();
+        return new Like((long)o[0],(long)o[1]);
     }
 }

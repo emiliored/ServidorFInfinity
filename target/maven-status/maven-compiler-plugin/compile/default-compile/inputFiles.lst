@@ -15,6 +15,7 @@
 /home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payata/rest/UsuarioFacadeREST.java
 /home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payata/rest/ComentarioFacadeREST.java
 /home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payara/dao/VisibilidadFacade.java
+/home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payara/clases/cliente/Like.java
 /home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payara/model/Etiqueta.java
 /home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payara/model/Comentario.java
 /home/usuario/NetBeansProjects/ServidorFInfinity/src/main/java/fish/payara/dao/AprecioFacade.java

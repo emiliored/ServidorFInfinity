@@ -22,6 +22,7 @@ fish/payara/clases/BadPasswordException.class
 fish/payara/dao/AbstractFacade.class
 fish/payara/model/Aprecio.class
 fish/payara/dao/JPAProducer.class
+fish/payara/clases/cliente/Like.class
 fish/payata/rest/VisibilidadFacadeREST.class
 fish/payara/dao/AprecioFacade.class
 fish/payara/dao/UsuarioFacade.class
