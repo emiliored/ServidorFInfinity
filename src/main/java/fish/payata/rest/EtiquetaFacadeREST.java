@@ -102,7 +102,7 @@ public class EtiquetaFacadeREST {
         }
     }
 
-    //Obtener las etiquetas publicas de todos los usuarios:	GENERALES (Ordenado alfabéticamente por nombre)
+    //Obtener las etiquetas publicas de todos los usuarios:	VALORADAS (Ordenado alfabéticamente por nombre)
     @GET
     @Path("valoradas")
     @Produces(APPLICATION_JSON)
@@ -111,11 +111,23 @@ public class EtiquetaFacadeREST {
         try {
             return Response.ok(etiquetaFacade.etiquetasValoradas()).build();
         } catch (Exception e) {
-            e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
         }
     }
 
+    //Obtener las etiquetas publicas de todos los usuarios:	POPULARES (Ordenado alfabéticamente por nombre)
+    @GET
+    @Path("populares")
+    @Produces(APPLICATION_JSON)
+    public Response findPopulares() {
+        LOGGER.info("En findPopulares()");
+        try {
+            return Response.ok(etiquetaFacade.etiquetasPopulares()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+    }
+    
     @DELETE
     public Response deleteEtiqueta(@QueryParam("idUsuario") int idUsuario, @QueryParam("nombre") String nombre) {
         LOGGER.info("En deleteEtiqueta()");
@@ -148,10 +160,10 @@ public class EtiquetaFacadeREST {
     @GET
     @Path("recurso")
     @Produces(APPLICATION_JSON)
-    public Response getEtiquetasRecurso(@QueryParam("idRecurso") int idRecurso) {
+    public Response getEtiquetasRecurso(@QueryParam("idRecurso") int idRecurso,@QueryParam("idUsuario") int idUsuario) {
         LOGGER.info("En getEtiquetasRecurso()");
         try {
-            return Response.ok(etiquetaFacade.etiquetasDeUnRecurso(idRecurso)).build();
+            return Response.ok(etiquetaFacade.etiquetasDeUnRecurso(idRecurso,idUsuario)).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Status.BAD_REQUEST).build();
