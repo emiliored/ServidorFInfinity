@@ -92,7 +92,7 @@ public class EtiquetaFacade extends AbstractFacade<Etiqueta> {
     } 
      
     private int countVisibilidad(){
-        TypedQuery<Integer> query = entityManager.createQuery("SELECT count(V) FROM Visibilidad v"
+        TypedQuery<Integer> query = entityManager.createQuery("SELECT count(V) FROM Visibilidad v WHERE v.visibilidad=true"
                 , Integer.class);
         return query.getFirstResult();
     } 

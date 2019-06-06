@@ -241,7 +241,7 @@ public class RecursoFacadeREST {
             Logger.getLogger(RecursoFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Response.Status.NOT_MODIFIED).build();
         }
-        return Response.ok().build();
+        return Response.status(Response.Status.OK).build();
     }
 
     //Guardar el fichero en disco. (Servidor)

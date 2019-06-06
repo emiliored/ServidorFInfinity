@@ -42,7 +42,7 @@ public class RecursoFacade extends AbstractFacade<Recurso> {
 
     public List<Recurso> findUserResouces(int idUsuario) {
         LOGGER.info("En findUserResouces()");
-        TypedQuery<Recurso> query = entityManager.createQuery("SELECT R FROM Recurso r WHERE r.idUsuario=:idUsuario",
+        TypedQuery<Recurso> query = entityManager.createQuery("SELECT R FROM Recurso r WHERE r.idUsuario=:idUsuario ORDER BY r.nombre",
                  Recurso.class);
         query.setParameter("idUsuario", idUsuario);
         return query.getResultList();
@@ -51,9 +51,9 @@ public class RecursoFacade extends AbstractFacade<Recurso> {
     //Obtener los nombres de los recursos públicos que no tienen etiquetas de todos los usuarios.	SIN ETIQUETAR (Ordenado alfabéticamente por nombre)
     public List<Recurso> recursosSinEtiquetar() throws Exception {
         //Sentencia JQL
-        TypedQuery<Recurso> query = entityManager.createQuery("SELECT R FROM Recurso r WHERE r.visibilidad=true AND R NOT IN(SELECT v.recurso FROM Visibilidad v)",
-                 Recurso.class)
-                .setMaxResults(20); //Número máximo de resultados.
+        TypedQuery<Recurso> query = entityManager.createQuery("SELECT R FROM Recurso r WHERE r.visibilidad=true AND R NOT IN(SELECT v.recurso FROM Visibilidad v) ORDER BY r.nombre",
+                 Recurso.class);
+                //.setMaxResults(20); //Número máximo de resultados.
         return query.getResultList();
     }
 
